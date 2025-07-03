@@ -1,12 +1,23 @@
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { Loader, TodoFilter, TodoList, TodoModal } from './components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppSelector } from './app/hooks';
+import { getTodos } from './api';
 
 export const App = () => {
   const currentTodo = useAppSelector(state => state.currentTodo);
-  const [loading, setLoading] = useState<boolean>(true);
+  const todos = useAppSelector(state => state.todos);
+
+  const [loading, setLoading] = useState<boolean>(todos.length === 0);
+
+  useEffect(() => {
+    getTodos().then(t => {
+      if (t.length) {
+        setLoading(false);
+      }
+    });
+  }, []);
 
   return (
     <>
@@ -21,7 +32,7 @@ export const App = () => {
 
             <div className="block">
               {loading && <Loader />}
-              <TodoList onLoading={setLoading} loading={loading} />
+              {!loading && <TodoList />}
             </div>
           </div>
         </div>

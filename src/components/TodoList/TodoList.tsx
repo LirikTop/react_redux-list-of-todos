@@ -11,14 +11,16 @@ interface Props {
   onLoading?: (loading: boolean) => void;
 }
 
-export const TodoList: React.FC<Props> = ({
-  onLoading = () => {},
-  loading,
-}) => {
+export const TodoList: React.FC<Props> = (
+  {
+    // onLoading = () => {},
+    // loading,
+  },
+) => {
   const [error, setError] = useState<string>('');
 
   const { actions } = todosSlice;
-  const { status, query} = useAppSelector(state => state.filter);
+  const { status, query } = useAppSelector(state => state.filter);
   const todos = useAppSelector(state => state.todos);
   const dispatch = useAppDispatch();
 
@@ -27,8 +29,8 @@ export const TodoList: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    setError('');
-    onLoading(true);
+    // setError('');
+    // onLoading(true);
 
     getTodos()
       .then(todos => {
@@ -49,27 +51,24 @@ export const TodoList: React.FC<Props> = ({
         }
         handleSetTodos(currentTodos);
 
-        if (currentTodos.length === 0) {
-          throw new Error(
-            'There are no todos matching current filter criteria',
-          );
+        if (!currentTodos.length) {
+          setError('There are no todos matching current filter criteria');
+        } else {
+          setError('');
         }
       })
-      .catch(error => {
-        setError(error.message);
-      })
       .finally(() => {
-        onLoading(false);
+        // onLoading(false);
       });
   }, [dispatch, actions, status, query]);
 
-  if (loading) {
-    return null;
-  }
+  // if (loading) {
+  //   return null;
+  // }
 
   return (
     <>
-      {error ? (
+      {error && !todos.length ? (
         <p className="notification is-warning" data-cy="errorMessage">
           {error}
         </p>
