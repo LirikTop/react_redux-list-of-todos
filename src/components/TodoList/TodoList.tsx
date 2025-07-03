@@ -6,17 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { todosSlice } from '../../features/todos';
 import { TodoComponent } from '../TodoComponent';
 
-interface Props {
-  loading?: boolean;
-  onLoading?: (loading: boolean) => void;
-}
-
-export const TodoList: React.FC<Props> = (
-  {
-    // onLoading = () => {},
-    // loading,
-  },
-) => {
+export const TodoList: React.FC = () => {
   const [error, setError] = useState<string>('');
 
   const { actions } = todosSlice;
@@ -29,9 +19,6 @@ export const TodoList: React.FC<Props> = (
   };
 
   useEffect(() => {
-    // setError('');
-    // onLoading(true);
-
     getTodos()
       .then(todos => {
         let currentTodos = todos.filter(todo => {
@@ -57,14 +44,7 @@ export const TodoList: React.FC<Props> = (
           setError('');
         }
       })
-      .finally(() => {
-        // onLoading(false);
-      });
   }, [dispatch, actions, status, query]);
-
-  // if (loading) {
-  //   return null;
-  // }
 
   return (
     <>
